@@ -27,24 +27,30 @@ public class Gui implements ItemListener {
         comboBoxPane.add(cb);
          
         //Create the "cards".
-        //Drop pin card
-        JPanel pinCard = new JPanel(new GridBagLayout()); 
         
+        //Drop pin card
+        JPanel pinCard = new JPanel(); 
         JPanel pinField = new JPanel();
         pinField.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
                 System.out.println(e.getPoint());
             }
         });
-        
-        pinCard.add(new JButton("Button 1"));
-        pinCard.add(new JButton("Button 2"));
-        pinCard.add(new JButton("Button 3"));
+        pinField.setBorder(BorderFactory.createLineBorder(Color.black));
+        pinField.setPreferredSize(new Dimension(200, 200));
         pinCard.add(pinField);
+        
         
         //Fuzzy card
         JPanel fuzzyCard = new JPanel();
-        fuzzyCard.add(new JTextField("TextField", 20));
+        fuzzyCard.setLayout(new BoxLayout(fuzzyCard, BoxLayout.PAGE_AXIS));
+        fuzzyCard.add(Box.createRigidArea(new Dimension(0,5)));
+        
+        addMemberFunction(fuzzyCard);
+        addMemberFunction(fuzzyCard);
+        
+		
+		
          
         
         
@@ -68,6 +74,29 @@ public class Gui implements ItemListener {
         });
         
       }*/
+    
+    public void addMemberFunction(JPanel panel){
+    	JPanel thisFunctionPanel = new JPanel(); 
+    	//thisFunctionPanel.setPreferredSize(new Dimension( 500, 10 ));
+    	thisFunctionPanel.add(new Label("Member Function"));
+		final TextField memberFunctionInput = new TextField("x^2", 15);//<-- no. of cols
+		final TextField lessInput = new TextField("0", 3);//<-- no. of cols
+		final TextField greaterInput = new TextField("10", 3);
+		JComboBox inequality1= new JComboBox(new String[]{"<", "<=", " "});
+		JComboBox variable = new JComboBox(new String[]{"x", "y"});
+		JComboBox inequality2 = new JComboBox(new String[]{"<", "<=", " "});
+		thisFunctionPanel.add(memberFunctionInput);
+		thisFunctionPanel.add(lessInput);
+		thisFunctionPanel.add(inequality1);
+		thisFunctionPanel.add(variable);
+		thisFunctionPanel.add(inequality2);
+		thisFunctionPanel.add(greaterInput);
+		thisFunctionPanel.setBorder(BorderFactory.createLineBorder(Color.black));
+		panel.add(thisFunctionPanel);
+		panel.setAlignmentX(Component.CENTER_ALIGNMENT);
+	       
+    }
+    
     
     public void itemStateChanged(ItemEvent evt) {
         CardLayout cl = (CardLayout)(cards.getLayout());
