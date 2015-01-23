@@ -45,8 +45,6 @@ public class Gui implements ItemListener {
         JPanel fuzzyCard = new JPanel();
         fuzzyCard.setLayout(new BoxLayout(fuzzyCard, BoxLayout.PAGE_AXIS));
         fuzzyCard.add(Box.createRigidArea(new Dimension(0,5)));
-        
-        addMemberFunction(fuzzyCard);
         addMemberFunction(fuzzyCard);
         
 		
@@ -76,9 +74,54 @@ public class Gui implements ItemListener {
       }*/
     
     public void addMemberFunction(JPanel panel){
-    	JPanel thisFunctionPanel = new JPanel(); 
+    	JPanel thisFunctionPanel = new JPanel();
+    	
+    	String[] functionTypesArray = {"Rectangular", "Trapezoidal", "Triangular"};
+    	JComboBox functionType= new JComboBox(functionTypesArray);
+ 	    thisFunctionPanel.add(functionType);
+ 	    thisFunctionPanel.setBorder(BorderFactory.createLineBorder(Color.black));
+		
+    	
+ 	    //Rectangle
+ 	    if (functionType.getSelectedIndex() == 0){
+ 	    	thisFunctionPanel.add(new Label("point a"));
+ 	    	thisFunctionPanel.add(new TextField("0.5", 3));
+ 	    	thisFunctionPanel.add(new Label("point b"));
+ 	    	thisFunctionPanel.add(new TextField("0.9", 3));
+ 	    	thisFunctionPanel.add(new Label("point y"));
+ 	    	thisFunctionPanel.add(new TextField("0.4", 3));
+ 	    }
+ 	    
+ 	    //Trapezoid
+ 	    else if (functionType.getSelectedIndex() == 1){
+ 	    	thisFunctionPanel.add(new Label("point a"));
+ 	    	thisFunctionPanel.add(new TextField("0.5", 3));
+ 	    	thisFunctionPanel.add(new Label("point b"));
+ 	    	thisFunctionPanel.add(new TextField("0.9", 3));
+ 	    	thisFunctionPanel.add(new Label("point c"));
+ 	    	thisFunctionPanel.add(new TextField("0.4", 3));
+ 	    	thisFunctionPanel.add(new Label("point d"));
+ 	    	thisFunctionPanel.add(new TextField("0.3", 3));
+ 	    }
+ 	    //Triangle
+ 	    else if (functionType.getSelectedIndex() == 2){
+ 	    	thisFunctionPanel.add(new Label("point a"));
+ 	    	thisFunctionPanel.add(new TextField("0.5", 3));
+ 	    	thisFunctionPanel.add(new Label("point b"));
+ 	    	thisFunctionPanel.add(new TextField("0.9", 3));
+ 	    	thisFunctionPanel.add(new Label("point c"));
+ 	    	thisFunctionPanel.add(new TextField("0.4", 3));
+ 	    }
+ 	    
+ 	    	
+ 	    		//Arrays.asList(yourArray).contains(yourChar)
+   
+ 	    
+		
+    	
+    	
     	//thisFunctionPanel.setPreferredSize(new Dimension( 500, 10 ));
-    	thisFunctionPanel.add(new Label("Member Function"));
+    	/*thisFunctionPanel.add(new Label("Member Function"));
 		final TextField memberFunctionInput = new TextField("x^2", 15);//<-- no. of cols
 		final TextField lessInput = new TextField("0", 3);//<-- no. of cols
 		final TextField greaterInput = new TextField("10", 3);
@@ -90,7 +133,7 @@ public class Gui implements ItemListener {
 		thisFunctionPanel.add(inequality1);
 		thisFunctionPanel.add(variable);
 		thisFunctionPanel.add(inequality2);
-		thisFunctionPanel.add(greaterInput);
+		thisFunctionPanel.add(greaterInput);*/
 		thisFunctionPanel.setBorder(BorderFactory.createLineBorder(Color.black));
 		panel.add(thisFunctionPanel);
 		panel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -101,6 +144,8 @@ public class Gui implements ItemListener {
     public void itemStateChanged(ItemEvent evt) {
         CardLayout cl = (CardLayout)(cards.getLayout());
         cl.show(cards, (String)evt.getItem());
+        
+        
     }
      
     /**

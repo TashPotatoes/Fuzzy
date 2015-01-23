@@ -108,7 +108,7 @@ public class BasicFuzzyController extends FuzzyController {
         }
 
         if (lv == null) {
-            throw new UnsupportedOperationException("HACER NUEVA EXCEPCION PARA ESTO");
+            throw new UnsupportedOperationException("exception thrown");
         } else {
             this.setConfidencesOfConsequentsToZero();
             for (Rule r : rulesList) {
