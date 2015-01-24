@@ -27,19 +27,23 @@ public class FuzzyOp {
         return new FuzzyAND(a, b);
     }
 
-    public static FuzzyTerm or(FuzzyTerm a, FuzzyTerm b) {
-        return new FuzzyOR(a, b);
-    }
-
-    public static FuzzyTerm not(FuzzyTerm a) {
-        return new FuzzyNOT(a);
-    }
-
     public static double or(double a, double b) {
         return Math.max(a, b);
+    }
+    
+    public static FuzzyTerm or(FuzzyTerm a, FuzzyTerm b) {
+        return new FuzzyOR(a, b);
     }
 
     public static double not(double a) {
         return 1 - a;
     }
+    
+    public static FuzzyTerm not(FuzzyTerm a) {
+        return new FuzzyNOT(a);
+    }
+
+    
+
+    
 }

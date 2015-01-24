@@ -17,15 +17,15 @@ package easyfuzzy.variables.functions;
 public class RectangularMembershipFunction implements MembershipFunction {
 
     /**
-     * The a point of the rectangle  
+     * The a point of the rectangle, left point where y=0  
      */
     private double a;
     /**
-     * The b point of the rectangle 
+     * The b point of the rectangle, right point where y=0 
      */
     private double b;
     /**
-     * The y point of the rectangle 
+     * The y point of the rectangle, point of highest truth 
      */
     private double y;
 

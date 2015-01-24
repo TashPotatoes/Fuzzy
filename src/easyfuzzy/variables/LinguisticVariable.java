@@ -105,7 +105,7 @@ public class LinguisticVariable {
         for (FuzzySet fs : setList) {
             double value = fs.getDOM();
             if (value > flag) {
-                labelFlag = fs.getLabel();
+                labelFlag = fs.getLabel(); //TODO check this, seems like flag is always 0
             }
         }
         return labelFlag;
@@ -149,7 +149,7 @@ public class LinguisticVariable {
         String labelFlag = "";
         for (FuzzySet fs : setList) {
             double value = fs.getNormalValue(input);
-            if (value > flag) {
+            if (value > flag) {//TODO check this seems like flag is always 0 so this is always true
                 labelFlag = fs.getLabel();
             }
         }

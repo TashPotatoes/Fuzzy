@@ -75,14 +75,17 @@ public class TrapezoidalMembershipFunction implements MembershipFunction {
     @Override
     public double getValue(double input) {
         double result = 0;
+        //If the input falls in the first triangular interval
         if (input >= a && input <= b) {
             result = (input - a) / (b - a);
             return result;
         }
+        //If the input falls in the second rectangular interval
         if (input >= b && input <= c) {
             result = 1;
             return result;
         }
+        //If the input falls in the third triangular interval
         if (input >= c && input <= d) {
             result = (input - d) / (c - d);
         }
@@ -102,6 +105,7 @@ public class TrapezoidalMembershipFunction implements MembershipFunction {
         double flag = 0;
         if (input >= a && input <= b) {
             flag = (input - a) / (b - a);
+            // TODO check this, will always result=flag unless clip=0
             if (result < clip) {
                 result = flag;
             } else {
@@ -132,7 +136,7 @@ public class TrapezoidalMembershipFunction implements MembershipFunction {
      * warning
      */
     @Override
-    public double getMax() {
+    public double getMax() {//TODO check that this returns 0-1 or input values. 
         if (Double.isInfinite(d)) {
             if (Double.isInfinite(c)) {
                 if (Double.isInfinite(b)) {
@@ -150,7 +154,7 @@ public class TrapezoidalMembershipFunction implements MembershipFunction {
      * warning
      */
     @Override
-    public double getMin() {
+    public double getMin() { //TODO check that this 0-1 or input range
         if (Double.isInfinite(a)) {
             if (Double.isInfinite(b)) {
                 if (Double.isInfinite(c)) {

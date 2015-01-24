@@ -38,7 +38,7 @@ public class TriangularMembershipFunction implements MembershipFunction {
      * constructor is infinity
      */
     public TriangularMembershipFunction(double a, double b, double c) throws FunctionException {
-        if (!Double.isInfinite(a) || !Double.isInfinite(b) || !Double.isInfinite(c)) {
+        if (!Double.isInfinite(a) || !Double.isInfinite(b) || !Double.isInfinite(c)) { //TODO check this if, might be utilising the error 
             this.a = a;
             this.b = b;
             this.c = c;
@@ -57,7 +57,7 @@ public class TriangularMembershipFunction implements MembershipFunction {
      * constructor is infinity
      */
     public TriangularMembershipFunction(double a, double b) throws FunctionException {
-        if (!Double.isInfinite(a) || !Double.isInfinite(b) || !Double.isInfinite(c)) {
+        if (!Double.isInfinite(a) || !Double.isInfinite(b) || !Double.isInfinite(c)) {//TODO check here too
             this.a = a;
             this.b = b;
             this.c = (a + b) / 2;

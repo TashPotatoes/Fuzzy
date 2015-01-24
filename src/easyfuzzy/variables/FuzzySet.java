@@ -76,7 +76,7 @@ public class FuzzySet {
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof FuzzySet) {
-            return getLabel().equalsIgnoreCase(obj.toString()) ? true : false;
+            return getLabel().equalsIgnoreCase(obj.toString()) ? true : false;//TODO dont need the true : false bit
         } else {
             return false;
         }
