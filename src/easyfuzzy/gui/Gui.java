@@ -2,7 +2,9 @@ package easyfuzzy.gui;
 
 import java.awt.*;
 import java.awt.event.*;
+
 import javax.swing.*;
+
 import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -10,142 +12,49 @@ import java.awt.geom.Rectangle2D;
  
 public class Gui implements ItemListener {
     JPanel cards; //a panel that uses CardLayout
+    PinCard pinCard;
+    VariablesCard variablesCard;
     final static String PINPANEL = "Drop pin in field";
-    final static String FUZZYPANEL = "Membership Functions";
+    final static String VARIABLESPANEL = "Membership Functions";
     final static String VIEWSETPANEL = "View Fuzzy Set";
     final static String OPSPANEL = "Fuzzy Operations";
+    int hasclicked = 0;
+    
+    public enum displayOptions {
+    	PINPANEL, FUZZYPANEL, VIEWSETPANEL, OPSPANEL
+    }
+   
+   String comboBoxItems[] = { pinCard.LABEL, variablesCard.LABEL, VIEWSETPANEL, OPSPANEL};
 
     
-     
+    private void makeCards(Container pane){
+        
+    	cards = new JPanel(new CardLayout());
+    	pinCard = new PinCard(cards); 
+        variablesCard = new VariablesCard(cards);
+       
+        pane.add(cards, BorderLayout.CENTER);
+        
+    }
+    
+    
+    
     public void addComponentToPane(Container pane) {
         //Put the JComboBox in a JPanel to get a nicer look.
         JPanel comboBoxPane = new JPanel(); //use FlowLayout
-        String comboBoxItems[] = { PINPANEL, FUZZYPANEL, VIEWSETPANEL, OPSPANEL };
         JComboBox cb = new JComboBox(comboBoxItems);
         cb.setEditable(false);
         cb.addItemListener(this);
         comboBoxPane.add(cb);
-         
-        //Create the "cards".
-        
-        //Drop pin card
-        JPanel pinCard = new JPanel(); 
-        JPanel pinField = new JPanel();
-        pinField.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent e) {
-                System.out.println(e.getPoint());
-            }
-        });
-        pinField.setBorder(BorderFactory.createLineBorder(Color.black));
-        pinField.setPreferredSize(new Dimension(200, 200));
-        pinCard.add(pinField);
-        
-        
-        //Fuzzy card
-        JPanel fuzzyCard = new JPanel();
-        fuzzyCard.setLayout(new BoxLayout(fuzzyCard, BoxLayout.PAGE_AXIS));
-        fuzzyCard.add(Box.createRigidArea(new Dimension(0,5)));
-        addMemberFunction(fuzzyCard);
-        
-		
-		
-         
-        
-        
-        //Create the panel that contains the "cards".
-        cards = new JPanel(new CardLayout());
-        cards.add(pinCard, PINPANEL);
-        cards.add(fuzzyCard, FUZZYPANEL);
-         
+        makeCards(pane);
         pane.add(comboBoxPane, BorderLayout.PAGE_START);
-        pane.add(cards, BorderLayout.CENTER);
     }
-    
-    /*public void paint(Graphics g) {
-        Graphics2D g2d = (Graphics2D) g;
-        Rectangle2D r2d = new Rectangle2D.Float(10f, 10f, 130f, 130f);
-        g2d.draw(r2d);
-        r2d.addMouseListener(new MouseAdapter() {
-            void mouseClicked(MouseEvent e) {
-                System.out.println(e.getPoint());
-            }
-        });
-        
-      }*/
-    
-    public void addMemberFunction(JPanel panel){
-    	JPanel thisFunctionPanel = new JPanel();
-    	
-    	String[] functionTypesArray = {"Rectangular", "Trapezoidal", "Triangular"};
-    	JComboBox functionType= new JComboBox(functionTypesArray);
- 	    thisFunctionPanel.add(functionType);
- 	    thisFunctionPanel.setBorder(BorderFactory.createLineBorder(Color.black));
-		
-    	
- 	    //Rectangle
- 	    if (functionType.getSelectedIndex() == 0){
- 	    	thisFunctionPanel.add(new Label("point a"));
- 	    	thisFunctionPanel.add(new TextField("0.5", 3));
- 	    	thisFunctionPanel.add(new Label("point b"));
- 	    	thisFunctionPanel.add(new TextField("0.9", 3));
- 	    	thisFunctionPanel.add(new Label("point y"));
- 	    	thisFunctionPanel.add(new TextField("0.4", 3));
- 	    }
- 	    
- 	    //Trapezoid
- 	    else if (functionType.getSelectedIndex() == 1){
- 	    	thisFunctionPanel.add(new Label("point a"));
- 	    	thisFunctionPanel.add(new TextField("0.5", 3));
- 	    	thisFunctionPanel.add(new Label("point b"));
- 	    	thisFunctionPanel.add(new TextField("0.9", 3));
- 	    	thisFunctionPanel.add(new Label("point c"));
- 	    	thisFunctionPanel.add(new TextField("0.4", 3));
- 	    	thisFunctionPanel.add(new Label("point d"));
- 	    	thisFunctionPanel.add(new TextField("0.3", 3));
- 	    }
- 	    //Triangle
- 	    else if (functionType.getSelectedIndex() == 2){
- 	    	thisFunctionPanel.add(new Label("point a"));
- 	    	thisFunctionPanel.add(new TextField("0.5", 3));
- 	    	thisFunctionPanel.add(new Label("point b"));
- 	    	thisFunctionPanel.add(new TextField("0.9", 3));
- 	    	thisFunctionPanel.add(new Label("point c"));
- 	    	thisFunctionPanel.add(new TextField("0.4", 3));
- 	    }
- 	    
- 	    	
- 	    		//Arrays.asList(yourArray).contains(yourChar)
-   
- 	    
-		
-    	
-    	
-    	//thisFunctionPanel.setPreferredSize(new Dimension( 500, 10 ));
-    	/*thisFunctionPanel.add(new Label("Member Function"));
-		final TextField memberFunctionInput = new TextField("x^2", 15);//<-- no. of cols
-		final TextField lessInput = new TextField("0", 3);//<-- no. of cols
-		final TextField greaterInput = new TextField("10", 3);
-		JComboBox inequality1= new JComboBox(new String[]{"<", "<=", " "});
-		JComboBox variable = new JComboBox(new String[]{"x", "y"});
-		JComboBox inequality2 = new JComboBox(new String[]{"<", "<=", " "});
-		thisFunctionPanel.add(memberFunctionInput);
-		thisFunctionPanel.add(lessInput);
-		thisFunctionPanel.add(inequality1);
-		thisFunctionPanel.add(variable);
-		thisFunctionPanel.add(inequality2);
-		thisFunctionPanel.add(greaterInput);*/
-		thisFunctionPanel.setBorder(BorderFactory.createLineBorder(Color.black));
-		panel.add(thisFunctionPanel);
-		panel.setAlignmentX(Component.CENTER_ALIGNMENT);
-	       
-    }
-    
     
     public void itemStateChanged(ItemEvent evt) {
         CardLayout cl = (CardLayout)(cards.getLayout());
         cl.show(cards, (String)evt.getItem());
-        
-        
+        hasclicked++;
+         
     }
      
     /**
@@ -267,4 +176,17 @@ public class Gui implements ItemListener {
     public void keyReleased(int keyCode) {
         //...
     }*/
+    /*public void paint(Graphics g) {
+    Graphics2D g2d = (Graphics2D) g;
+    Rectangle2D r2d = new Rectangle2D.Float(10f, 10f, 130f, 130f);
+    g2d.draw(r2d);
+    r2d.addMouseListener(new MouseAdapter() {
+        void mouseClicked(MouseEvent e) {
+            System.out.println(e.getPoint());
+        }
+    });
+    
+  }*/
+
+ 
 }

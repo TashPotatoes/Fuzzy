@@ -90,6 +90,7 @@ public class EasyFuzzy {
         cm.setSamplesPoints(10);
         bfc.setDefuzzifyerMethod(cm);
         //System.out.println("TEST: "+ef..getDOM());
+        System.out.println("DEFUZZIFYED VALUE: " + bfc.defuzzify("DESIRABILITY"));
         Gui gui = new Gui();
         System.out.println("DEFUZZIFYED VALUE: " + bfc.defuzzify("DESIRABILITY"));
     }
