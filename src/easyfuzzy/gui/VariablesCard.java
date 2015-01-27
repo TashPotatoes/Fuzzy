@@ -8,8 +8,15 @@ import java.awt.Dimension;
 import java.awt.Label;
 import java.awt.TextField;
 import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.FlowLayout;
+import java.awt.BorderLayout;
+
+
+import java.util.Arrays;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -18,37 +25,45 @@ import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
 public class VariablesCard {
-	JPanel variablesCard;
+	private JPanel variablesCard;
+	private JPanel cards;
+	private ItemListener gui;
+	String[]  functionTypes = {"Rectangular", "Trapezoidal", "Triangular"};
 	final static String LABEL = "Membership Functions";
+	private int INITIAL_TYPE_INDEX = 0;
 	
-	public VariablesCard(JPanel cards){
-		
+	public VariablesCard(JPanel cards, ItemListener gui){
+		this.gui = gui;
+		this.cards = cards;
 		JPanel variablesCard = new JPanel();
         variablesCard.setLayout(new BoxLayout(variablesCard, BoxLayout.PAGE_AXIS));
         variablesCard.add(Box.createRigidArea(new Dimension(0,5)));
-        addMemberFunction(variablesCard);
+        addMemberFunction(INITIAL_TYPE_INDEX);
         cards.add(variablesCard, LABEL);
         
 	}
 	
 	public void itemStateChanged(ItemEvent evt) {
-        CardLayout cl = (CardLayout)(cards.getLayout());
-        cl.show(cards, (String)evt.getItem());
+        //CardLayout cl = (CardLayout)(variablesCard.getLayout());
+        //cl.show(cards, (String)evt.getItem());
+
+		String evtName = (String)evt.getItem();
+		int functionIndex = Arrays.asList(functionTypes).indexOf(evtName);
+		System.out.println((String)evt.getItem());
+        addMemberFunction(functionIndex);
          
     }
 
-	private void addMemberFunction(JPanel panel){
+	private void addMemberFunction(int index){
     	JPanel thisFunctionPanel = new JPanel();
+    	//BoxLayout layout = (BoxLayout)(variablesCard.getLayout());
+        
     	
-    	String[] functionTypesArray = {"Rectangular", "Trapezoidal", "Triangular"};
-    	JComboBox functionType= new JComboBox(functionTypesArray);
+    	
+    	JComboBox functionType= new JComboBox(functionTypes);
  	    thisFunctionPanel.add(functionType);
  	    thisFunctionPanel.setBorder(BorderFactory.createLineBorder(Color.black));
- 	    functionType.addItemListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent e) {
-                System.out.println(e.getPoint());
-            }
-        });
+ 	    functionType.addItemListener(gui);
     	
  	    //Rectangle
  	    if (functionType.getSelectedIndex() == 0){
@@ -103,8 +118,11 @@ public class VariablesCard {
 		thisFunctionPanel.add(inequality2);
 		thisFunctionPanel.add(greaterInput);*/
 		thisFunctionPanel.setBorder(BorderFactory.createLineBorder(Color.black));
-		panel.add(thisFunctionPanel);
-		panel.setAlignmentX(Component.CENTER_ALIGNMENT);
+		variablesCard.add(thisFunctionPanel);
+	
+		
+		((Component) gui).validate();
+		variablesCard.setAlignmentX(Component.CENTER_ALIGNMENT);
 	       
     }
 	

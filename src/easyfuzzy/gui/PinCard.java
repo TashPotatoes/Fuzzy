@@ -3,6 +3,7 @@ package easyfuzzy.gui;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -10,12 +11,16 @@ import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
 public class PinCard {
+	private ItemListener gui;
+	
 	final static String LABEL = "Drop pin in field";
-	JPanel pinCard;
-	JPanel pinField;
+	private JPanel pinCard;
+	private JPanel pinField;
 	
 	
-	public PinCard(JPanel cards){
+	public PinCard(JPanel cards, ItemListener gui){
+		this.gui = gui;
+		
 		//Drop pin card
         pinCard = new JPanel(); 
         pinField = new JPanel();

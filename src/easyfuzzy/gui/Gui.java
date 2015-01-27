@@ -30,8 +30,8 @@ public class Gui implements ItemListener {
     private void makeCards(Container pane){
         
     	cards = new JPanel(new CardLayout());
-    	pinCard = new PinCard(cards); 
-        variablesCard = new VariablesCard(cards);
+    	pinCard = new PinCard(cards, this); 
+        variablesCard = new VariablesCard(cards, this);
        
         pane.add(cards, BorderLayout.CENTER);
         
@@ -54,6 +54,8 @@ public class Gui implements ItemListener {
         CardLayout cl = (CardLayout)(cards.getLayout());
         cl.show(cards, (String)evt.getItem());
         hasclicked++;
+        System.out.println((String)evt.getItem() + "from main");
+        
          
     }
      
