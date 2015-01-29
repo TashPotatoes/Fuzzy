@@ -26,7 +26,7 @@ public class PinCard {
         pinField = new JPanel();
         pinField.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
-                System.out.println(e.getPoint());
+                System.out.println((e.getPoint()).getClass());
             }
         });
         pinField.setBorder(BorderFactory.createLineBorder(Color.black));
