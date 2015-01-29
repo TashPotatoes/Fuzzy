@@ -16,6 +16,8 @@ public class PinCard {
 	final static String LABEL = "Drop pin in field";
 	private JPanel pinCard;
 	private JPanel pinField;
+	private int x;
+	private int y;
 	
 	
 	public PinCard(JPanel cards, ItemListener gui){
@@ -27,6 +29,9 @@ public class PinCard {
         pinField.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
                 System.out.println((e.getPoint()).getClass());
+                x = e.getPoint().x;
+                y = e.getPoint().y;
+                
             }
         });
         pinField.setBorder(BorderFactory.createLineBorder(Color.black));
@@ -39,6 +44,12 @@ public class PinCard {
 		return pinCard;
 	}
 	
+	public int getX(){
+		return x;
+	}
 	 
+	public int getY(){
+		return y;
+	}
 
 }

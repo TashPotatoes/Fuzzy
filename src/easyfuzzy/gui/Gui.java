@@ -5,6 +5,8 @@ import java.awt.event.*;
 
 import javax.swing.*;
 
+import easyfuzzy.controller.BasicFuzzyController;
+
 import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -13,6 +15,8 @@ import java.awt.geom.Rectangle2D;
 public class Gui implements ItemListener {
     JPanel cards; //a panel that uses CardLayout
     PinCard pinCard;
+    BasicFuzzyController bfc;
+    
     VariablesCard variablesCard;
     final static String PINPANEL = "Drop pin in field";
     final static String VARIABLESPANEL = "Membership Functions";
