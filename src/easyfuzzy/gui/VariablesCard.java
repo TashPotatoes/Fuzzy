@@ -67,14 +67,14 @@ public class VariablesCard {
 	private void processCard(JPanel panel){
 		for (JPanel function : functions){
 			
-			function.component[0].getSelectedIndex();
+			//function.component[0].getSelectedIndex();
 			
 			//function.getComponent(n)
-			function.
-			Label("point a");
+			//function.
+			//Label("point a");
 			
 			
-			for (Component component : function.getComponents()){
+			/*for (Component component : function.getComponents()){
 				if(component instanceof JComboBox) {
 			        JLabel htmlArea = (JLabel) components[1];
 			        htmlArea.setText("<html>new changes here</html>");
@@ -83,9 +83,9 @@ public class VariablesCard {
 			    }
 				
 			}
+			*/
 			
-			
-			
+			/*
 			
 			
 			//Square
@@ -120,7 +120,7 @@ public class VariablesCard {
 	 	    	thisFunctionPanel.add(new TextField("0.9", 3));
 	 	    	thisFunctionPanel.add(new Label("point c"));
 	 	    	thisFunctionPanel.add(new TextField("0.4", 3));
-	 	    }
+	 	    }*/
 		}	
 	}
 
@@ -128,7 +128,7 @@ public class VariablesCard {
     	JPanel thisFunctionPanel = new JPanel();
     	//BoxLayout layout = (BoxLayout)(variablesCard.getLayout());
         
-    	
+    	/*
     	
     	functionType = new JComboBox(functionTypes);
  	    thisFunctionPanel.add(functionType);
@@ -166,7 +166,7 @@ public class VariablesCard {
  	    	thisFunctionPanel.add(new TextField("0.4", 3));
  	    }
  	    
- 	    	
+ 	    	*/
  	    		//Arrays.asList(yourArray).contains(yourChar)
    
  	    
