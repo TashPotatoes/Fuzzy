@@ -16,6 +16,7 @@ public class Gui implements ItemListener {
     JPanel cards; //a panel that uses CardLayout
     PinCard pinCard;
     BasicFuzzyController bfc;
+    Plane plane;
     
     VariablesCard variablesCard;
     final static String PINPANEL = "Drop pin in field";
@@ -28,15 +29,16 @@ public class Gui implements ItemListener {
     	PINPANEL, FUZZYPANEL, VIEWSETPANEL, OPSPANEL
     }
    
-   String comboBoxItems[] = { pinCard.LABEL, variablesCard.LABEL, VIEWSETPANEL, OPSPANEL};
+   String comboBoxItems[] = { pinCard.LABEL, variablesCard.LABEL, VIEWSETPANEL, OPSPANEL, "3D Surface"};
 
     
     private void makeCards(Container pane){
         
     	cards = new JPanel(new CardLayout());
-    	pinCard = new PinCard(cards, this); 
+    	pinCard = new PinCard(cards, this);
         variablesCard = new VariablesCard(cards, this);
-       
+        plane = new Plane(1000, 100, cards, this);
+        
         pane.add(cards, BorderLayout.CENTER);
         
     }

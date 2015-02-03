@@ -20,28 +20,48 @@ import javax.swing.*;
 import javax.swing.event.*;*/
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.util.Random;
 
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.plaf.basic.BasicArrowButton;
 
+import java.awt.BorderLayout;
+import java.awt.event.ItemListener;
+import java.util.Random;
+
+import javax.swing.JFrame;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.plaf.basic.BasicArrowButton;
+
+import net.ericaro.surfaceplotter.JSurfacePanel;
+import net.ericaro.surfaceplotter.Mapper;
+import net.ericaro.surfaceplotter.surface.AbstractSurfaceModel;
+import net.ericaro.surfaceplotter.surface.ArraySurfaceModel;
+import net.ericaro.surfaceplotter.surface.SurfaceVertex;
 
 
+//import com.googlecode.surfaceplotter.*; 
 
-import com.googlecode.surfaceplotter.*; 
+
 
 import javax.swing.JComponent;
 
 public class Plane {
 	private int[][] colourPlot;
-	
+	private JPanel planeCard;
+	private JPanel cards;
+	private ItemListener gui;
 	
 	
 	    
-	public Plane(int width, int length){
+	public Plane(int width, int length, JPanel cards, ItemListener gui){
 		colourPlot = new int[width][length];
 		/*drawingComponent = new DrawingComponent();      
         box = new Rectangle(100, 100, 20, 30);
@@ -52,6 +72,13 @@ public class Plane {
         xRate = 0.101;
 
         yCoord = new double[yCoord_size];*/
+		this.gui = gui;
+		this.cards = cards;
+		planeCard = new JPanel();
+        
+        cards.add(planeCard, "3D Surface");
+		this.TestSomething();
+		
 	}
 	
 	/*
@@ -68,9 +95,9 @@ public class Plane {
 		
 		// Draw vertical Line
 		if ((x1 == x2) && (y1 != y2)){
-			int minY = Math.min(y1, y2);
+			int minY = (int)Math.min(y1, y2);
 			int maxY = Math.max(y1, y2);
-			for (int y = minY, y < maxY, y++){
+			for (int y = minY; y < maxY; y++){
 				colourPlot[x1][y] = rgb;
 			}
 		}
@@ -116,16 +143,18 @@ public class Plane {
 	    int yCoord_size;
 	}
 	
-	public void testSomething() {
+	public void TestSomething() {
 		JSurfacePanel jsp = new JSurfacePanel();
 	    jsp.setTitleText("Hello");
+	    
+	    planeCard.add(jsp, BorderLayout.CENTER);
 	
-	    JFrame jf = new JFrame("test");
+	    /*JFrame jf = new JFrame("LAMELRKGER;GHKJSR;TLKJT;HKURSTH");
 	    jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	    jf.getContentPane().add(jsp, BorderLayout.CENTER);
 	    jf.pack();
-	    jf.setVisible(true);
-	
+	    jf.setVisible(true);*/
+	    	
 	    Random rand = new Random();
 	    int max = 10;
 	    float[][] z1 = new float[max][max];
