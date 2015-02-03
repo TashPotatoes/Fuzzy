@@ -34,7 +34,10 @@ public class Gui implements ItemListener {
     
     private void makeCards(Container pane){
         
+    	// order that it compiles determines which one is first.
     	cards = new JPanel(new CardLayout());
+    	   	
+    	//cards.setSize( 800, 630 );
     	pinCard = new PinCard(cards, this);
         variablesCard = new VariablesCard(cards, this);
         plane = new Plane(1000, 100, cards, this);
@@ -54,6 +57,7 @@ public class Gui implements ItemListener {
         comboBoxPane.add(cb);
         makeCards(pane);
         pane.add(comboBoxPane, BorderLayout.PAGE_START);
+        
     }
     
     public void itemStateChanged(ItemEvent evt) {
@@ -74,13 +78,14 @@ public class Gui implements ItemListener {
         //Create and set up the window.
         JFrame frame = new JFrame("CardLayoutDemo");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-         
+        
         //Create and set up the content pane.
         Gui demo = new Gui();
         demo.addComponentToPane(frame.getContentPane());
-         
+        
         //Display the window.
         frame.pack();
+        //frame.setSize( 800, 630 );
         frame.setVisible(true);
     }
      

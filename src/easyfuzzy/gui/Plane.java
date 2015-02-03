@@ -54,15 +54,15 @@ import net.ericaro.surfaceplotter.surface.SurfaceVertex;
 import javax.swing.JComponent;
 
 public class Plane {
-	private int[][] colourPlot;
+	private float[][] plot;
 	private JPanel planeCard;
 	private JPanel cards;
 	private ItemListener gui;
-	
+	private JSurfacePanel jsp;
 	
 	    
 	public Plane(int width, int length, JPanel cards, ItemListener gui){
-		colourPlot = new int[width][length];
+		plot = new float[width][length];
 		/*drawingComponent = new DrawingComponent();      
         box = new Rectangle(100, 100, 20, 30);
         graphObj = new Graph();
@@ -75,17 +75,19 @@ public class Plane {
 		this.gui = gui;
 		this.cards = cards;
 		planeCard = new JPanel();
+		
         
+        this.TestSomething();
         cards.add(planeCard, "3D Surface");
-		this.TestSomething();
+		
 		
 	}
 	
 	/*
 	 * Sets the colour of a single point
 	 */
-	public void ColourPoint(int x, int y, int rgb){
-		colourPlot[x][y] = rgb;
+	public void setPoint(int x, int y, int value){
+		plot[x][y] = value;
 	}
 	
 	/*
@@ -98,7 +100,7 @@ public class Plane {
 			int minY = (int)Math.min(y1, y2);
 			int maxY = Math.max(y1, y2);
 			for (int y = minY; y < maxY; y++){
-				colourPlot[x1][y] = rgb;
+				plot[x1][y] = rgb;
 			}
 		}
 		
@@ -120,7 +122,7 @@ public class Plane {
 				int c = Math.abs((x2*y1 - y2*y1)/(x2 - x1));
 						
 				for (int i = 0; i < dist; i++){
-					colourPlot[x1][y1] = rgb;
+					plot[x1][y1] = rgb;
 					x1++;
 					y1 = m*x1 + c;
 				}
@@ -134,21 +136,46 @@ public class Plane {
 	 */
 	
 	public void DrawPanel(){
-		JPanel displayPane = new JPanel();
-		displayPane.setBackground(Color.WHITE);
-		displayPane.setBounds(173, 33, 455, 432);
-		//frame.getContentPane().add(displayPane);
-		
-		double xCoord; 
-	    int yCoord_size;
+		jsp = new JSurfacePanel();
+	    jsp.setTitleText("Yaz Mumma said hello");
+	    jsp.setPreferredSize(new Dimension(700, 630));
+	    
+	    planeCard.add(jsp, BorderLayout.CENTER);
+	    planeCard.setPreferredSize(new Dimension(730, 660));
+	    
+	    /*JFrame jf = new JFrame("LAMELRKGER;GHKJSR;TLKJT;HKURSTH");
+	    jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	    jf.getContentPane().add(jsp, BorderLayout.CENTER);
+	    jf.pack();
+	    jf.setVisible(true);*/
+	    	
+	    Random rand = new Random();
+	    int max = 10;
+	    float[][] z1 = new float[max][max];
+	    float[][] z2 = new float[max][max];
+	    for (int i = 0; i < max; i++) {
+	            for (int j = 0; j < max; j++) {
+	                    z1[i][j] = rand.nextFloat() * 20 - 10f;
+	                    z2[i][j] = rand.nextFloat() * 20 - 10f;
+	            }
+	    }
+	    ArraySurfaceModel sm = new ArraySurfaceModel();
+	    sm.setValues(0f,10f,0f,10f,max, plot, null);
+	    jsp.setModel(sm);
+	    // sm.doRotate();
+	
+	    // canvas.doPrint();
+	    // sm.doCompute();
 	}
 	
 	public void TestSomething() {
-		JSurfacePanel jsp = new JSurfacePanel();
-	    jsp.setTitleText("Hello");
+		jsp = new JSurfacePanel();
+	    jsp.setTitleText("Yaz Mumma said hello");
+	    jsp.setPreferredSize(new Dimension(700, 630));
 	    
 	    planeCard.add(jsp, BorderLayout.CENTER);
-	
+	    planeCard.setPreferredSize(new Dimension(730, 660));
+	    
 	    /*JFrame jf = new JFrame("LAMELRKGER;GHKJSR;TLKJT;HKURSTH");
 	    jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	    jf.getContentPane().add(jsp, BorderLayout.CENTER);
@@ -174,7 +201,7 @@ public class Plane {
 	    // sm.doCompute();
 	}
 	
-	public static float f1(float x, float y) {
+	/*public static float f1(float x, float y) {
 	    // System.out.print('.');
 	    return (float) (Math.sin(x * x + y * y) / (x * x + y * y));
 	    // return (float)(10*x*x+5*y*y+8*x*y -5*x+3*y);
@@ -183,7 +210,7 @@ public class Plane {
 	public static float f2(float x, float y) {
 	    return (float) (Math.sin(x * x - y * y) / (x * x + y * y));
 	    // return (float)(10*x*x+5*y*y+15*x*y-2*x-y);
-	}
+	}*/
 		
 
 }
