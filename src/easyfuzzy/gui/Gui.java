@@ -6,6 +6,10 @@ import java.awt.event.*;
 import javax.swing.*;
 
 import easyfuzzy.controller.BasicFuzzyController;
+import easyfuzzy.rules.modifier.FzSet;
+import easyfuzzy.variables.LinguisticVariable;
+import easyfuzzy.variables.functions.TrapezoidalMembershipFunction;
+import easyfuzzy.variables.functions.TriangularMembershipFunction;
 
 import java.awt.Frame;
 import java.awt.Graphics;
@@ -17,7 +21,17 @@ public class Gui implements ItemListener {
     PinCard pinCard;
     BasicFuzzyController bfc;
     Plane plane;
-    
+    private FzSet targetclose;
+    private FzSet targetmedium;
+    private FzSet targetfar;
+    private FzSet desirable;
+    private FzSet undesirable;
+    private FzSet verydesirable;
+    private FzSet loads;
+    private FzSet okay;
+    private FzSet low;
+
+
     VariablesCard variablesCard;
     final static String PINPANEL = "Drop pin in field";
     final static String VARIABLESPANEL = "Membership Functions";
@@ -46,6 +60,14 @@ public class Gui implements ItemListener {
         
     }
     
+    private void makeLinguisticVars(){
+    	/*LinguisticVariable lv = new LinguisticVariable("DISTANCE");
+        targetclose = lv.addSet("targetclose", new TrapezoidalMembershipFunction(0, 0, 25, 50));
+        targetmedium = lv.addSet("targetmedium", new TriangularMembershipFunction(25, 300, 150));
+        targetfar = lv.addSet("targetfar", new TrapezoidalMembershipFunction(150, 300, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY));
+        bfc.addVariable(lv);*/
+
+    }
     
     
     public void addComponentToPane(Container pane) {
@@ -74,7 +96,7 @@ public class Gui implements ItemListener {
      * this method should be invoked from the
      * event dispatch thread.
      */
-    private static void createAndShowGUI() {
+    static void createAndShowGUI() {
         //Create and set up the window.
         JFrame frame = new JFrame("CardLayoutDemo");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -89,8 +111,8 @@ public class Gui implements ItemListener {
         frame.setVisible(true);
     }
      
-    public static void main(String[] args) {
-        /* Use an appropriate Look and Feel */
+    /*public static void main(String[] args) {
+        // Use an appropriate Look and Feel
         try {
             //UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
             UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
@@ -103,7 +125,7 @@ public class Gui implements ItemListener {
         } catch (ClassNotFoundException ex) {
             ex.printStackTrace();
         }
-        /* Turn off metal's use of bold fonts */
+        // Turn off metal's use of bold fonts
         UIManager.put("swing.boldMetal", Boolean.FALSE);
          
         //Schedule a job for the event dispatch thread:
@@ -113,7 +135,7 @@ public class Gui implements ItemListener {
                 createAndShowGUI();
             }
         });
-    }
+    }*/
 
 
 

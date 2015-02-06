@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.GradientPaint;
 import java.awt.Label;
 import java.awt.TextField;
 import java.awt.event.ItemEvent;
@@ -15,14 +16,21 @@ import java.awt.FlowLayout;
 import java.awt.BorderLayout;
 
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.border.Border;
 
 import easyfuzzy.controller.BasicFuzzyController;
 import easyfuzzy.variables.IllegalSetException;
@@ -31,201 +39,265 @@ import easyfuzzy.variables.functions.FunctionException;
 import easyfuzzy.variables.functions.TrapezoidalMembershipFunction;
 import easyfuzzy.variables.functions.TriangularMembershipFunction;
 
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.CategoryAxis;
+import org.jfree.chart.axis.CategoryLabelPositions;
+import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.axis.ValueAxis;
+import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.category.BarRenderer;
+import org.jfree.chart.renderer.xy.XYItemRenderer;
+/*import org.jfree.data.category.CategoryDataset;
+import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.time.Minute;
+import org.jfree.data.time.TimeSeries;
+import org.jfree.data.time.TimeSeriesCollection;*/
+import org.jfree.data.xy.XYDataset;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
+
+
+
+
+
 public class VariablesCard {
-	private JPanel variablesCard;
-	private JPanel cards;
+	private JPanel card;
+	private JPanel allCards;
 	private ItemListener gui;
+	private JButton addButton;
+	private JButton saveButton;
+	private int numFunctions = 1;
+	Border loweredBevel = BorderFactory.createLoweredBevelBorder();
+	private double [][] inputData = new double [4][5];
+
 	String[]  functionLabels = {"Rectangular", "Trapezoidal", "Triangular"};
 	final static String LABEL = "Membership Functions";
 	private int INITIAL_TYPE_INDEX = 0;
-	List<JPanel> functions;
+	Queue<JPanel> functionPanels;
+	Queue<JComboBox> functionCBs;
 	
 	
 	public VariablesCard(JPanel cards, ItemListener gui){
 		this.gui = gui;
-		this.cards = cards;
-		JPanel variablesCard = new JPanel();
-        variablesCard.setLayout(new BoxLayout(variablesCard, BoxLayout.PAGE_AXIS));
-        variablesCard.add(Box.createRigidArea(new Dimension(0,5)));
-        addMemberFunction(INITIAL_TYPE_INDEX);
-        cards.add(variablesCard, LABEL);
-        
+		this.allCards = cards;
+		functionPanels = new LinkedList<JPanel>();
+		functionCBs = new LinkedList<JComboBox>();
+		card = new JPanel();
+        card.setLayout(new BoxLayout(card, BoxLayout.PAGE_AXIS));
+        card.add(Box.createRigidArea(new Dimension(0,5)));
+        drawCard();
+        allCards.add(card, LABEL);
 	}
+	
+	/*
+	 * Draws entire card, including 
+	 */
+	public void drawCard() {
+		drawFunctions();
+		drawVisual();
+	}
+	
+	public void drawVisual(){
+		processCard();
+		JPanel chart = new ChartPanel(
+				createChart(createDataSeries(inputData)));
+		card.add(chart);
+	}
+	
+	
+	private void processCard(){
+		//iterate over all panels, check if visible, find type, save data, create linquistic vars
+		for (Component parentC : card.getComponents()){
+			if (parentC instanceof JPanel && parentC.isVisible() == true){
+				int i = 0;
+				int textFields = 1;
+				for (Component c : ((Container) parentC).getComponents()){
+					if (c instanceof JComboBox){
+						
+						inputData[i][0] = ((JComboBox) c).getSelectedIndex();
+						i++;
+						
+					} 
+					// TODO: add data to adt so don't have to iterate and hope for the best
+					else if (c instanceof JTextField){
+						inputData[i][textFields] = Double.parseDouble(((JTextField) c).getText());
+						
+						System.out.println("new data is " + inputData[i][textFields]);
+						textFields++;
+					}
+				}
+			}
+				
+			
+		}
+		
+		
+	}
+	
+	public double[][] getData(){
+		return inputData;
+	}
+	
+	private XYSeriesCollection createDataSeries(double[][] data){
+		
+		XYSeriesCollection allFunctions = new XYSeriesCollection();
+		
+		for (int i = 0; i < data.length; i++){
+			double a = data[i][1];
+			double b = data[i][2];
+			double c = data[i][3];
+			double d = data[i][4];
+			
+			
+			if (data[i][0] == 0) {
+				// Rectangular membership goes (a,0) to (a, c) to (b,c) to (b,0)
+				XYSeries function = new XYSeries(functionLabels[(int)data[i][0]] + " " + i);
+				function.add(a, 0);
+				function.add(a, c);
+				function.add(b, c);
+				function.add(b, 0);	
+				allFunctions.addSeries(function);
+			
+			} else if (data[i][0] == 1) {
+				// Trapezoidal membership goes (a,0) to (b,1) to (c,1) to (d,0)
+				XYSeries function = new XYSeries(functionLabels[(int)data[i][0]] + " " + i);	
+				function.add(a, 0);
+				function.add(b, 1);
+				function.add(c, 1);
+				function.add(d, 0);								
+				allFunctions.addSeries(function);
+				
+			} else if (data[i][0] == 2) {
+				// Triangle membership goes (a,0) to (c,1) to (b,0)
+				XYSeries function = new XYSeries(functionLabels[(int)data[i][0]] + " " + i);
+				function.add(a, 0);
+				function.add(c, 1);
+				function.add(b, 0);
+				allFunctions.addSeries(function);
+				
+			}
+			
+		}
+		return allFunctions;
+	}
+	
+	private JFreeChart createChart(final XYSeriesCollection dataset){
+		JFreeChart XYLineChart = ChartFactory.createXYLineChart( "Function", "Input", "Membership Degree", dataset, PlotOrientation.VERTICAL, true, true, false);
+		
+		XYItemRenderer renderer = XYLineChart.getXYPlot().getRenderer();
+		renderer.setSeriesPaint(0, Color.black);
+		renderer.setSeriesPaint(1, Color.blue);
+		renderer.setSeriesPaint(2, Color.cyan);
+		renderer.setSeriesPaint(3, Color.gray);
+		renderer.setSeriesPaint(4, Color.darkGray);
+		renderer.setSeriesPaint(5, Color.yellow);
+		renderer.setSeriesPaint(6, Color.green);
+		renderer.setSeriesPaint(7, Color.red);
+
+		XYPlot plot = XYLineChart.getXYPlot();
+
+		ValueAxis domain = plot.getDomainAxis();
+		domain.setAutoRange(true);
+		ValueAxis range = plot.getRangeAxis();
+		range.resizeRange(0, 1);
+		
+		NumberAxis xAxis = (NumberAxis) XYLineChart.getXYPlot().getRangeAxis();
+		xAxis.setRange(0,1);
+		NumberAxis yAxis = (NumberAxis) XYLineChart.getXYPlot().getDomainAxis();
+		yAxis.setRange(0,1);
+		
+
+		XYLineChart.setBackgroundPaint(Color.lightGray);
+		XYLineChart.getLegend().setBackgroundPaint(Color.white);
+		return XYLineChart;
+		
+	}
+
+
+	private void drawFunctions(){
+		
+	// draw four functions, set invisible. 		
+		for (int i = 0; i < 4; i++){
+			JPanel row = new JPanel();
+			JComboBox cb = new JComboBox(functionLabels);
+			row.add(cb);
+			cb.addItemListener(gui);
+			drawOneFunction(row);
+			//row.setVisible(false);
+			functionPanels.add(row);
+			functionCBs.add(cb);
+			row.setPreferredSize(new Dimension(10, 600));
+			card.add(row);
+			row.setBorder(loweredBevel);
+		}
+		
+		functionPanels.peek().setVisible(true);
+		
+		addButton = new JButton("add");
+		saveButton = new JButton("save");
+		
+		addButton.addItemListener(gui);
+		saveButton.addItemListener(gui);
+		
+		card.add(addButton);
+		card.add(saveButton);
+	
+	}
+		
+	private void drawOneFunction(JPanel panel){
+			panel.add(new Label("point a"));
+ 	    	panel.add(new JTextField("0.5", 3));
+ 	    	panel.add(new Label("point b"));
+ 	    	panel.add(new JTextField("0.9", 3));
+ 	    	panel.add(new Label("point y"));
+ 	    	panel.add(new JTextField("0.4", 3));
+ 	    	panel.add(new Label("point d"));
+ 	    	panel.add(new JTextField("0.3", 3));
+ 	    	changeToTri(panel);
+ 	    	panel.setBorder(loweredBevel);
+ 	    	
+ 	    }
+	
+	
+	private void changeToRect(JPanel panel){
+		// First 6 components are always visible
+		panel.getComponent(6).setVisible(true);
+	    panel.getComponent(7).setVisible(true);	    	
+	}
+	
+	private void changeToTrap(JPanel panel){
+		panel.getComponent(6).setVisible(true);
+	    panel.getComponent(7).setVisible(true);	    	
+	}
+	
+	private void changeToTri(JPanel panel){
+		panel.getComponent(6).setVisible(false);
+	    panel.getComponent(7).setVisible(false);	    	
+	}
+	
+	
+ 	 
+		
+	
+	
+	
 	
 	public void itemStateChanged(ItemEvent evt) {
         //CardLayout cl = (CardLayout)(variablesCard.getLayout());
         //cl.show(cards, (String)evt.getItem());
 
-		
+		System.out.println("trying state change from card");
+        
 		String evtName = (String)evt.getItem();
 		int functionIndex = Arrays.asList(functionLabels).indexOf(evtName);
-		System.out.println((String)evt.getItem());
-        addMemberFunction(functionIndex);
+		System.out.println((String)evt.getItem() + functionIndex + "from card");
+        //addMemberFunction(functionIndex);
          
     }
 	
-	private void processCard(JPanel panel){
-		for (JPanel function : functions){
-			
-			//function.component[0].getSelectedIndex();
-			
-			//function.getComponent(n)
-			//function.
-			//Label("point a");
-			
-			
-			/*for (Component component : function.getComponents()){
-				if(component instanceof JComboBox) {
-			        JLabel htmlArea = (JLabel) components[1];
-			        htmlArea.setText("<html>new changes here</html>");
-			        htmlArea.revalidate();
-			        x
-			    }
-				
-			}
-			*/
-			
-			/*
-			
-			
-			//Square
-			if (function.getComponents    getSelectedIndex() == 0){
-				
-				//get point a
-				
-	 	    	thisFunctionPanel.add(new Label("point a"));
-	 	    	thisFunctionPanel.add(new TextField("0.5", 3));
-	 	    	thisFunctionPanel.add(new Label("point b"));
-	 	    	thisFunctionPanel.add(new TextField("0.9", 3));
-	 	    	thisFunctionPanel.add(new Label("point y"));
-	 	    	thisFunctionPanel.add(new TextField("0.4", 3));
-	 	    }
-	 	    
-	 	    //Trapezoid
-	 	    else if (function.getSelectedIndex() == 1){
-	 	    	thisFunctionPanel.add(new Label("point a"));
-	 	    	thisFunctionPanel.add(new TextField("0.5", 3));
-	 	    	thisFunctionPanel.add(new Label("point b"));
-	 	    	thisFunctionPanel.add(new TextField("0.9", 3));
-	 	    	thisFunctionPanel.add(new Label("point c"));
-	 	    	thisFunctionPanel.add(new TextField("0.4", 3));
-	 	    	thisFunctionPanel.add(new Label("point d"));
-	 	    	thisFunctionPanel.add(new TextField("0.3", 3));
-	 	    }
-	 	    //Triangle
-	 	    else if (function.getSelectedIndex() == 2){
-	 	    	thisFunctionPanel.add(new Label("point a"));
-	 	    	thisFunctionPanel.add(new TextField("0.5", 3));
-	 	    	thisFunctionPanel.add(new Label("point b"));
-	 	    	thisFunctionPanel.add(new TextField("0.9", 3));
-	 	    	thisFunctionPanel.add(new Label("point c"));
-	 	    	thisFunctionPanel.add(new TextField("0.4", 3));
-	 	    }*/
-		}	
-	}
-
-	private void addMemberFunction(int index){
-    	JPanel thisFunctionPanel = new JPanel();
-    	//BoxLayout layout = (BoxLayout)(variablesCard.getLayout());
-        
-    	/*
-    	
-    	functionType = new JComboBox(functionTypes);
- 	    thisFunctionPanel.add(functionType);
- 	    thisFunctionPanel.setBorder(BorderFactory.createLineBorder(Color.black));
- 	    functionType.addItemListener(gui);
-    	
- 	    //Rectangle
- 	    if (functionType.getSelectedIndex() == 0){
- 	    	thisFunctionPanel.add(new Label("point a"));
- 	    	thisFunctionPanel.add(new TextField("0.5", 3));
- 	    	thisFunctionPanel.add(new Label("point b"));
- 	    	thisFunctionPanel.add(new TextField("0.9", 3));
- 	    	thisFunctionPanel.add(new Label("point y"));
- 	    	thisFunctionPanel.add(new TextField("0.4", 3));
- 	    }
- 	    
- 	    //Trapezoid
- 	    else if (functionType.getSelectedIndex() == 1){
- 	    	thisFunctionPanel.add(new Label("point a"));
- 	    	thisFunctionPanel.add(new TextField("0.5", 3));
- 	    	thisFunctionPanel.add(new Label("point b"));
- 	    	thisFunctionPanel.add(new TextField("0.9", 3));
- 	    	thisFunctionPanel.add(new Label("point c"));
- 	    	thisFunctionPanel.add(new TextField("0.4", 3));
- 	    	thisFunctionPanel.add(new Label("point d"));
- 	    	thisFunctionPanel.add(new TextField("0.3", 3));
- 	    }
- 	    //Triangle
- 	    else if (functionType.getSelectedIndex() == 2){
- 	    	thisFunctionPanel.add(new Label("point a"));
- 	    	thisFunctionPanel.add(new TextField("0.5", 3));
- 	    	thisFunctionPanel.add(new Label("point b"));
- 	    	thisFunctionPanel.add(new TextField("0.9", 3));
- 	    	thisFunctionPanel.add(new Label("point c"));
- 	    	thisFunctionPanel.add(new TextField("0.4", 3));
- 	    }
- 	    
- 	    	*/
- 	    		//Arrays.asList(yourArray).contains(yourChar)
-   
- 	    
-		
-    	
-    	
-    	//thisFunctionPanel.setPreferredSize(new Dimension( 500, 10 ));
-    	/*thisFunctionPanel.add(new Label("Member Function"));
-		final TextField memberFunctionInput = new TextField("x^2", 15);//<-- no. of cols
-		final TextField lessInput = new TextField("0", 3);//<-- no. of cols
-		final TextField greaterInput = new TextField("10", 3);
-		JComboBox inequality1= new JComboBox(new String[]{"<", "<=", " "});
-		JComboBox variable = new JComboBox(new String[]{"x", "y"});
-		JComboBox inequality2 = new JComboBox(new String[]{"<", "<=", " "});
-		thisFunctionPanel.add(memberFunctionInput);
-		thisFunctionPanel.add(lessInput);
-		thisFunctionPanel.add(inequality1);
-		thisFunctionPanel.add(variable);
-		thisFunctionPanel.add(inequality2);
-		thisFunctionPanel.add(greaterInput);*/
-		thisFunctionPanel.setBorder(BorderFactory.createLineBorder(Color.black));
-		//variablesCard.add(thisFunctionPanel);
-	
-		
-		//((Component) gui).validate();
-		//variablesCard.setAlignmentX(Component.CENTER_ALIGNMENT);
-	       
-    }
-	
-	
-	/*public void createVariables(BasicFuzzyController bfc) throws FunctionException {
-        try {
-
-            LinguisticVariable lv = new LinguisticVariable("DISTANCE");
-            targetclose = lv.addSet("targetclose", new TrapezoidalMembershipFunction(0, 0, 25, 50));
-            targetmedium = lv.addSet("targetmedium", new TriangularMembershipFunction(25, 300, 150));
-            targetfar = lv.addSet("targetfar", new TrapezoidalMembershipFunction(150, 300, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY));
-            bfc.addVariable(lv);
-
-            LinguisticVariable am = new LinguisticVariable("AMMOSTATUS");
-            low = am.addSet("low", new TriangularMembershipFunction(0, 10, 0));
-            okay = am.addSet("okey", new TriangularMembershipFunction(0, 30, 10));
-            loads = am.addSet("loads", new TrapezoidalMembershipFunction(10, 30, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY));
-            bfc.addVariable(am);
-
-            LinguisticVariable ds = new LinguisticVariable("DESIRABILITY");
-            undesirable = ds.addSet("undesirable", new TrapezoidalMembershipFunction(0, 0, 25, 50));
-            desirable = ds.addSet("desirable", new TriangularMembershipFunction(25, 75, 50));
-            verydesirable = ds.addSet("verydesirable", new TrapezoidalMembershipFunction(50, 75, 100, Double.POSITIVE_INFINITY));
-            bfc.addVariable(ds);
-
-            System.out.println("VARIABLES CREATED!");
-        } catch (IllegalSetException ex) {
-            ex.printStackTrace();
-        }
-    }*/
-
-	public JPanel get(){
-		return variablesCard;
-	}
 }
 
