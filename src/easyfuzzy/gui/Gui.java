@@ -43,7 +43,12 @@ public class Gui implements ItemListener {
     	PINPANEL, FUZZYPANEL, VIEWSETPANEL, OPSPANEL
     }
    
-   String comboBoxItems[] = { pinCard.LABEL, variablesCard.LABEL, VIEWSETPANEL, OPSPANEL, "3D Surface"};
+//   String comboBoxItems[] = { pinCard.LABEL, variablesCard.getLabel(), VIEWSETPANEL, OPSPANEL, "3D Surface"};
+   String comboBoxItems[] = { pinCard.LABEL, "Membership Functions", VIEWSETPANEL, OPSPANEL, "3D Surface"};
+   
+   
+   
+   
 
     
     private void makeCards(Container pane){
@@ -54,11 +59,12 @@ public class Gui implements ItemListener {
     	//cards.setSize( 800, 630 );
     	pinCard = new PinCard(cards, this);
         variablesCard = new VariablesCard(cards, this);
-        plane = new Plane(1000, 100, cards, this);
-        
+        plane = new Plane(cards, this);
+        plane.setPlot(variablesCard.getData());
         pane.add(cards, BorderLayout.CENTER);
         
     }
+    
     
     private void makeLinguisticVars(){
     	/*LinguisticVariable lv = new LinguisticVariable("DISTANCE");

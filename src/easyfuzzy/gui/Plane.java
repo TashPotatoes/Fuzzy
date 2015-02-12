@@ -59,10 +59,18 @@ public class Plane {
 	private JPanel cards;
 	private ItemListener gui;
 	private JSurfacePanel jsp;
+	private String title;
+	private float xmax;
+	private float xmin;
+	private float ymax;
+	private float ymin;
+	private int xCount;
+	private int yCount;
 	
 	    
-	public Plane(int width, int length, JPanel cards, ItemListener gui){
-		plot = new float[width][length];
+	public Plane( JPanel cards, ItemListener gui){
+		
+		
 		/*drawingComponent = new DrawingComponent();      
         box = new Rectangle(100, 100, 20, 30);
         graphObj = new Graph();
@@ -78,11 +86,29 @@ public class Plane {
 		
         
         this.TestSomething();
+		//this.DrawPanel();
         cards.add(planeCard, "3D Surface");
 		
 		
 	}
 	
+
+	public void setPlot(float[][] input){
+		xCount = input.length;
+		yCount = input[0].length;
+		plot = new float[xCount][yCount];
+		for (int x = 0; x < xCount; x++){
+			for (int y = 0; y < yCount; y++){
+				plot[x][y] = input[x][y];
+			}
+		}
+	}
+	
+	
+	public void setTitle(String title){
+		this.title = title;		
+	}
+		
 	/*
 	 * Sets the colour of a single point
 	 */
@@ -93,14 +119,14 @@ public class Plane {
 	/*
 	 * Draws a line from two sets of integer points
 	 */
-	public void DrawLine(int x1, int y1, int x2, int y2, int rgb){
+	public void DrawLine(int x1, int y1, int x2, int y2, int degree){
 		
 		// Draw vertical Line
 		if ((x1 == x2) && (y1 != y2)){
 			int minY = (int)Math.min(y1, y2);
 			int maxY = Math.max(y1, y2);
 			for (int y = minY; y < maxY; y++){
-				plot[x1][y] = rgb;
+				plot[x1][y] = degree;
 			}
 		}
 		
@@ -122,7 +148,7 @@ public class Plane {
 				int c = Math.abs((x2*y1 - y2*y1)/(x2 - x1));
 						
 				for (int i = 0; i < dist; i++){
-					plot[x1][y1] = rgb;
+					plot[x1][y1] = degree;
 					x1++;
 					y1 = m*x1 + c;
 				}

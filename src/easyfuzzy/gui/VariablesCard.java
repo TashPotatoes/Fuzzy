@@ -71,26 +71,38 @@ public class VariablesCard {
 	private JButton addButton;
 	private JButton saveButton;
 	private int numFunctions = 1;
-	Border loweredBevel = BorderFactory.createLoweredBevelBorder();
-	private double [][] inputData = new double [4][5];
+	private int numInputs;
+	private Border loweredBevel = BorderFactory.createLoweredBevelBorder();
+	private float [][] inputData;  
 
-	String[]  functionLabels = {"Rectangular", "Trapezoidal", "Triangular"};
-	final static String LABEL = "Membership Functions";
+	private String[]  functionLabels = {"Rectangular", "Trapezoidal", "Triangular"};
+	private final static String LABEL = "Membership Functions";
 	private int INITIAL_TYPE_INDEX = 0;
-	Queue<JPanel> functionPanels;
-	Queue<JComboBox> functionCBs;
+	private Queue<JPanel> functionPanels;
+	private String[] functionNames;
+	private ArrayList<ArrayList< Component > > inputComponents; 
+	private int TYPE_INDEX = 0;
+	private int NAME_INDEX = 1;
 	
 	
 	public VariablesCard(JPanel cards, ItemListener gui){
 		this.gui = gui;
 		this.allCards = cards;
 		functionPanels = new LinkedList<JPanel>();
-		functionCBs = new LinkedList<JComboBox>();
+		inputComponents = new ArrayList<>();
 		card = new JPanel();
         card.setLayout(new BoxLayout(card, BoxLayout.PAGE_AXIS));
         card.add(Box.createRigidArea(new Dimension(0,5)));
         drawCard();
         allCards.add(card, LABEL);
+	}
+	
+	public String getLabel(){
+		return LABEL;
+	}
+	
+	public String[] getFunctionNames(){
+		return functionNames;
 	}
 	
 	/*
@@ -110,7 +122,31 @@ public class VariablesCard {
 	
 	
 	private void processCard(){
-		//iterate over all panels, check if visible, find type, save data, create linquistic vars
+		numFunctions = inputComponents.size();
+		numInputs = inputComponents.get(0).size();
+		
+		inputData = new float [numFunctions][numInputs];
+		
+		
+		functionNames = new String[numFunctions];
+		
+		for (int i = 0; i < numFunctions; i++){
+			
+			inputData[i][TYPE_INDEX] = ((JComboBox) inputComponents.get(i).get(TYPE_INDEX)).getSelectedIndex();
+			functionNames[i] = ((JTextField) inputComponents.get(i).get(NAME_INDEX)).getText(); 
+			
+			// skip type and name
+			for (int j = NAME_INDEX + 1; j < numInputs; j++){
+				inputData[i][j] = Float.parseFloat(((JTextField) inputComponents.get(i).get(j)).getText());
+			}
+			
+
+			
+		} 
+		
+		
+		
+		/*//iterate over all panels, check if visible, find type, save data, create linquistic vars
 		for (Component parentC : card.getComponents()){
 			if (parentC instanceof JPanel && parentC.isVisible() == true){
 				int i = 0;
@@ -133,24 +169,24 @@ public class VariablesCard {
 			}
 				
 			
-		}
+		}*/
 		
 		
 	}
 	
-	public double[][] getData(){
+	public float[][] getData(){
 		return inputData;
 	}
 	
-	private XYSeriesCollection createDataSeries(double[][] data){
+	private XYSeriesCollection createDataSeries(float[][] data){
 		
 		XYSeriesCollection allFunctions = new XYSeriesCollection();
 		
 		for (int i = 0; i < data.length; i++){
-			double a = data[i][1];
-			double b = data[i][2];
-			double c = data[i][3];
-			double d = data[i][4];
+			float a = data[i][1];
+			float b = data[i][2];
+			float c = data[i][3];
+			float d = data[i][4];
 			
 			
 			if (data[i][0] == 0) {
@@ -218,6 +254,7 @@ public class VariablesCard {
 	}
 
 
+	
 	private void drawFunctions(){
 		
 	// draw four functions, set invisible. 		
@@ -226,11 +263,16 @@ public class VariablesCard {
 			JComboBox cb = new JComboBox(functionLabels);
 			row.add(cb);
 			cb.addItemListener(gui);
-			drawOneFunction(row);
+			
 			//row.setVisible(false);
 			functionPanels.add(row);
-			functionCBs.add(cb);
-			row.setPreferredSize(new Dimension(10, 600));
+			
+ 	    	inputComponents.add( new ArrayList<Component>(6));
+ 	    	inputComponents.get(i).add(TYPE_INDEX, cb);
+ 	    	drawOneFunction(row, i);
+			
+ 	    	row.setPreferredSize(new Dimension(10, 600));
+			
 			card.add(row);
 			row.setBorder(loweredBevel);
 		}
@@ -248,19 +290,49 @@ public class VariablesCard {
 	
 	}
 		
-	private void drawOneFunction(JPanel panel){
-			panel.add(new Label("point a"));
- 	    	panel.add(new JTextField("0.5", 3));
- 	    	panel.add(new Label("point b"));
- 	    	panel.add(new JTextField("0.9", 3));
- 	    	panel.add(new Label("point y"));
- 	    	panel.add(new JTextField("0.4", 3));
- 	    	panel.add(new Label("point d"));
- 	    	panel.add(new JTextField("0.3", 3));
+	private void drawOneFunction(JPanel panel, int panelIndex){
+			Label name = new Label("name");
+			Label pointA = new Label("point a");
+			Label pointB = new Label("point b");
+			Label pointC = new Label("point c");
+			Label pointD = new Label("point d");
+			
+			JTextField valueName = new JTextField("Temperature", 12);
+			JTextField valueA = new JTextField("0.5", 3);
+			JTextField valueB = new JTextField("0.9", 3);
+			JTextField valueC = new JTextField("0.4", 3);
+			JTextField valueD = new JTextField("0.3", 3);			
+					
+			panel.add(name);
+	    	panel.add(valueName);
+	    	panel.add(pointA);
+ 	    	panel.add(valueA);
+ 	    	panel.add(pointB);
+ 	    	panel.add(valueB);
+ 	    	panel.add(pointC);
+ 	    	panel.add(valueC);
+ 	    	panel.add(pointD);
+ 	    	panel.add(valueD);
+ 	    	
  	    	changeToTri(panel);
  	    	panel.setBorder(loweredBevel);
+ 	    	 	    	
+ 	    	inputComponents.get(panelIndex).add(1, valueName);
+ 	    	inputComponents.get(panelIndex).add(2, valueA);
+ 	    	inputComponents.get(panelIndex).add(3, valueB);
+ 	    	inputComponents.get(panelIndex).add(4, valueC);
+ 	    	inputComponents.get(panelIndex).add(5, valueD);
  	    	
- 	    }
+ 	    	
+ 	    	/*for (Component c : panel.getComponents()){
+ 	    		if (c instanceof JTextField){
+ 	    			inputComponents.get(panelIndex).add(c);
+ 	    		}
+
+ 	    	}*/
+			
+ 	    	
+	}
 	
 	
 	private void changeToRect(JPanel panel){
